@@ -1,0 +1,24 @@
+# Binaries
+server/server
+*.exe
+*.exe;
+*.dll
+*.so
+*.dylib
+
+# Test & Python environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

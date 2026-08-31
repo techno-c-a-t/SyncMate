@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package syncmate;
+
+option go_package = "syncmate/server/internal/proto/syncmate";
+
+// Состояния участника
+enum ParticipantStateEnum {
+  STATE_UNKNOWN = 0;
+  STATE_WAITING = 1;   // В лобби
+  STATE_READY = 2;     // Нажал "Готов"
+  STATE_ACTIVE = 3;    // Активно бежит
+  STATE_PAUSED = 4;    // На паузе
+  STATE_LEFT = 5;      // Покинул комнату
+  STATE_BANNED = 6;    // Забанен
+}
+
+// Команды администратора
+enum AdminActionCommand {
+  ACTION_UNKNOWN = 0;
+  ACTION_BEGIN = 1;               // /begin - старт тренировки
+  ACTION_TERMINATE = 2;           // /terminate - глобальное завершение
+  ACTION_BAN = 3;                 // /ban - бан/выселение участника
+  ACTION_GIVE_ADMIN = 4;          // /give_admin - назначение админом
+  ACTION_TAKE_ADMIN = 5;          // /take_admin - разжалование из админов
+  ACTION_SET_GOAL = 6;            // Установка/изменение цели тренировки
+  ACTION_SET_START_COUNTDOWN = 7; // Запуск обратного отсчета (5, 10, 15 сек)
+}
+
+// Типы целей тренировки
+enum GoalType {
+  GOAL_NONE = 0;        // Без цели
+  GOAL_DISTANCE = 1;    // Цель по дистанции (в метрах)
+  GOAL_TIME = 2;        // Цель по времени (в секундах)
+  GOAL_CALORIES = 3;    // Цель по калориям
+}
+
+// Структура цели тренировки
+message WorkoutGoal {
+  GoalType goal_type = 1;
+  int32 target_value = 2; // Значение (метры, секунды или калории)
+}
+
+// Точка GPS траектории
+message PathPoint {
+  int64 delta_time_ms = 1;
+  double pos_x = 2;
+  double pos_y = 3;
+  int32 altitude_mm = 4;
+  int32 speed_mm_s = 5;
+  int32 slope_deg = 6;
+  int32 delta_steps = 7;
+}
+
+// Пакет телеметрии от Пользователя к Серверу (point)
+message UserPointMessage {
+  int32 user_id = 1;          // slot_id пользователя
+  int32 packet_id = 2;        // sequence_number
+  ParticipantStateEnum state = 3; // Явное состояние (ACTIVE / PAUSED / READY / LEFT)
+  
+  int32 speed_mm_s = 4;
+  int32 kal_common = 5;
+  int32 distance_common_m = 6;
+  int32 train_time_sec = 7;
+  int32 steps = 8;
+  int32 altitude_mm = 9;
+  
+  repeated PathPoint points = 10; // Батч GPS точек
+}
+
+// Пакет команды от админа (admin_command)
+message AdminCommandMessage {
+  int32 admin_id = 1;
+  AdminActionCommand action = 2;
+  int32 target_user_id = 3;
+  
+  WorkoutGoal new_goal = 4;
+  int32 countdown_seconds = 5;
+}
+
+// Состояние участника на сервере (participant_state)
+message ParticipantState {
+  string username = 1;
+  int32 user_id = 2;
+  ParticipantStateEnum state = 3; // Явный статус (ACTIVE / PAUSED / BANNED и т.д.)
+  
+  double pos_x = 4;
+  double pos_y = 5;
+  
+  int32 train_cf_scaled = 6;
+  int32 altitude_mm = 7;
+  int32 speed_mm_s = 8;
+  int32 distance_m = 9;
+  int32 kalories = 10;
+  int32 slope_deg = 11;
+  
+  bool is_admin = 12;
+  
+  repeated PathPoint recent_points = 13;
+}
+
+// Общая рассылка комнаты от сервера (room_state)
+message RoomStateBroadcast {
+  string room_id = 1;
+  string title = 2;
+  string description = 3;
+  int32 room_train_time_sec = 4;
+  int64 workout_start_time_ms = 5;
+  int64 countdown_start_time_ms = 6;
+  int32 countdown_seconds = 7;
+  bool workout_active = 8;
+  
+  WorkoutGoal goal = 9;
+  repeated ParticipantState participants = 10;
+}
+
+// Полные данные комнаты для Админа (all_server_data)
+message AdminFullServerDataBroadcast {
+  string room_id = 1;
+  string title = 2;
+  string description = 3;
+  int32 room_train_time_sec = 4;
+  int64 workout_start_time_ms = 5;
+  int64 countdown_start_time_ms = 6;
+  int32 countdown_seconds = 7;
+  bool workout_active = 8;
+  
+  WorkoutGoal goal = 9;
+  repeated string admin_usernames = 10;
+  repeated string user_usernames = 11;
+  repeated ParticipantState participants_states = 12;
+}
+
+// Ответ сервера на команду админа
+message CommandAckMessage {
+  AdminActionCommand action = 1;
+  int32 status_code = 2;      // 200 = OK, 403 = Forbidden, 404 = Not Found
+  string message = 3;
+}
