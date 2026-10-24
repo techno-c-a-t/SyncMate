@@ -45,7 +45,7 @@ server/
 ### 2. `proto/syncmate.proto` — Протокол общения
 Наш бинарный контракт между мобильным приложением и сервером. В нём объявлены:
 - **`ParticipantStateEnum`**: Четкий энум состояний бегуна (`STATE_WAITING` — в лобби, `STATE_READY` — готов, `STATE_ACTIVE` — бежит, `STATE_PAUSED` — на паузе, `STATE_LEFT` — вышел, `STATE_BANNED` — забанен).
-- **`AdminActionCommand`**: Команды управленца (`ACTION_BEGIN`, `ACTION_TERMINATE`, `ACTION_BAN`, `ACTION_UNBAN`, `ACTION_GIVE_ADMIN`, `ACTION_TAKE_ADMIN`, `ACTION_SET_GOAL`, `ACTION_SET_START_COUNTDOWN`).
+- **`AdminActionCommand`**: Команды администратора (`ACTION_BEGIN`, `ACTION_TERMINATE`, `ACTION_BAN`, `ACTION_UNBAN`, `ACTION_GIVE_ADMIN`, `ACTION_TAKE_ADMIN`, `ACTION_SET_GOAL`, `ACTION_SET_START_COUNTDOWN`).
 - **`UserPointMessage`**: Пакет телеметрии с батчем GPS-точек `PathPoint`.
 - **`RoomStateBroadcast`**: Единый кадр состояния комнаты, который сервер транслирует всем участникам.
 
