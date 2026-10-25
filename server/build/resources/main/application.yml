@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: syncmate-server
+  datasource:
+    url: jdbc:h2:mem:syncmatedb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update # Hibernate сам создаст таблицы по классам-моделям
+    show-sql: true     # В консоли будет видно сгенерированные SQL-запросы
+  h2:
+    console:
+      enabled: true    # Веб-консоль базы данных по адресу http://localhost:8080/h2-console
+
+server:
+  port: 8080
