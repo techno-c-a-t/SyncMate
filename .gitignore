@@ -22,3 +22,56 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+
+# ===============================
+# 1. Gradle & Сборка (Build artifacts)
+# ===============================
+.gradle/
+**/build/
+build/
+out/
+**/out/
+*.class
+
+# Игнорируем скомпилированные библиотеки, НО оставляем Gradle Wrapper!
+*.jar
+*.war
+*.ear
+!gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# ===============================
+# 2. IntelliJ IDEA / Android Studio
+# ===============================
+.idea/
+*.iml
+*.ipr
+*.iws
+.navigation/
+
+# ===============================
+# 3. Android (для папки app)
+# ===============================
+local.properties
+.cxx/
+captures/
+*.apk
+*.aab
+
+# ===============================
+# 4. Временные файлы и ОС
+# ===============================
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.log
+/tmp/
+
+# ===============================
+# 5. Безопасность и ключи
+# ===============================
+*.pem
+*.key
+*.env
