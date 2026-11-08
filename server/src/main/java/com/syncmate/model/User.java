@@ -14,15 +14,25 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
     public User() {}
 
-    public User(Long id, String username) {
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(Long id, String username, String password) {
         this.id = id;
         this.username = username;
+        this.password = password;
     }
 
     public Long getId() { return id; }
     public String getUsername() { return username; }
+    public String getPassword() { return password; }
 
     @Override
     public boolean equals(Object o) {

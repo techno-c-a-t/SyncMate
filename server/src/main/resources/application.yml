@@ -17,3 +17,8 @@ spring:
 
 server:
   port: 8080
+
+jwt:
+  # Секретный ключ (минимум 256 бит / 32 байта для HMAC-SHA256)
+  secret: "syncmate-ultra-secure-and-long-secret-key-for-jwt-token-generation-2026-running-app"
+  expiration-ms: 86400000 # 24 часа

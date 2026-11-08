@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class SyncMateApplication {
@@ -14,12 +15,12 @@ public class SyncMateApplication {
         SpringApplication.run(SyncMateApplication.class, args);
     }
 
-    // Предзаполним базу двумя тестовыми пользователями при старте
+    // Предзаполним базу тестовыми пользователями (пароль: password123)
     @Bean
-    public CommandLineRunner initTestData(UserRepository userRepository) {
+    public CommandLineRunner initTestData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            userRepository.save(new User(1L, "alex_runner"));
-            userRepository.save(new User(2L, "john_doe"));
+            userRepository.save(new User("alex_runner", passwordEncoder.encode("password123")));
+            userRepository.save(new User("john_doe", passwordEncoder.encode("password123")));
         };
     }
 }
